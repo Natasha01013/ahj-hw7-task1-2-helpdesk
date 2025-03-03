@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Система управления тикетами</h1>
+            <button id="addTicketBtn" class="add-ticket-btn">Добавить тикет</button>
+        </header>
+
+        <div id="ticket-list" class="ticket-list">
+            <!-- Список тикетов будет отображаться здесь -->
+        </div>
+
+        <div id="loading" class="loading">
+            <img src="./image/Eclipse.gif" alt="Загрузка...">
+        </div>
+
+        <!-- Модальное окно для создания/редактирования тикета -->
+        <div id="ticketModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" id="closeModalBtn">&times;</span>
+                <h2>Добавить новый тикет</h2>
+                <form id="ticketForm">
+                    <label class="title" for="name">Название:</label>
+                    <input type="text" id="name" name="name" required><br>
+
+                    <label  class="title" for="description">Описание:</label>
+                    <textarea id="description" name="description"></textarea><br>
+
+                    <button type="submit" id="saveTicketBtn">Сохранить</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Модальное окно для подтверждения удаления -->
+        <div id="deleteModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" id="closeDeleteModalBtn">&times;</span>
+                <h2>Вы уверены, что хотите удалить этот тикет?</h2>
+                <button id="confirmDeleteBtn">Удалить</button>
+                <button id="cancelDeleteBtn">Отмена</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

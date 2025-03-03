@@ -1,0 +1,22 @@
+{
+    "env": {
+      "browser": true, //код может быть выполнен в браузере, поэтому глобальные объекты window, document и др, разрешены
+      "es2021": true, //код будет использовать возможности ECMAScript 2021
+      "node": true, //сообщает ESLint, что код будет работать в среде Node.js
+      "jest": true //проект использует Jest для тестирования, и ESLint должен учитывать глобальные объекты Jest (describe, it, expect и др.)
+    },
+    "extends": "eslint:recommended", //нужно использовать рекомендованные правила ESLint
+    "overrides": [
+      {
+        "files": ["**/*/*.test.js"], //все файлы с расширением .test.js в любых подпапках, будут применяться следующие настройки
+        "plugins": ["jest"], //активирует плагин jest, который добавляет специфичные для Jest правила
+        "extends": ["plugin:jest/recommended"], //добавляет набор рекомендаций плагина Jest, чтобы улучшить качество тестов
+        "rules": { "jest/prefer-expect-assertions": "off" } //отключает правило jest/prefer-expect-assertions, которое по умолчанию рекомендует указывать количество ассертов в тестах
+      }
+    ],
+    "parserOptions": { //опции парсера для синтаксиса
+      "ecmaVersion": "latest", //ESLint должен поддерживать последние возможности JavaScript
+      "sourceType": "module" //сообщает ESLint, что код использует модули ECMAScript (import/export), а не CommonJS 
+    },
+    "rules": {} //в этом объекте можно настроить или переопределить конкретные правила линтинга
+  }
