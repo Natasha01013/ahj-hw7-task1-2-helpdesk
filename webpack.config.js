@@ -8,10 +8,13 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
   },
 
+  devtool: 'inline-source-map',
   devServer: {
-    port: 7070,
+    historyApiFallback: true,
+    open: true,
+    compress: true,
+    port: 8080,
   },
-  devtool: 'source-map',
 
   module: {
     rules: [

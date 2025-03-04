@@ -1,29 +1,24 @@
 export class TicketApp {
     constructor(apiUrl) {
       this.apiUrl = apiUrl;
-      this.ticketList = document.getElementById('ticket-list'); //список тикетов
-      this.loading = document.getElementById('loading'); //картинка загрузки
-      this.addTicketBtn = document.getElementById('addTicketBtn'); //кнопка добавления тикета справа
-      this.ticketModal = document.getElementById('ticketModal'); //модальное окно для создания тикета
-      this.closeModalBtn = document.getElementById('closeModalBtn'); //кнопка закрытия модального окна
-      this.ticketForm = document.getElementById('ticketForm'); //форма тикета внутри модального окна
-      this.saveTicketBtn = document.getElementById('saveTicketBtn'); //кнопка для сохранения тикета
-      this.deleteModal = document.getElementById('deleteModal'); //удаление модального окна
-      this.closeDeleteModalBtn = document.getElementById('closeDeleteModalBtn'); //кнопка удаления тикета
-      this.confirmDeleteBtn = document.getElementById('confirmDeleteBtn'); //кнопка удалить тикет
-      this.cancelDeleteBtn = document.getElementById('cancelDeleteBtn'); // кнопка отменить для тикета
-  
       this.currentTicket = null;  // Для хранения тикета, который редактируется или удаляется
-  
-      this.addTicketBtn.addEventListener('click', () => this.openTicketModal()); 
-      this.closeModalBtn.addEventListener('click', () => this.closeTicketModal());
-      this.ticketForm.addEventListener('submit', (event) => this.handleFormSubmit(event));
-      this.confirmDeleteBtn.addEventListener('click', () => this.deleteTicket());
-      this.cancelDeleteBtn.addEventListener('click', () => this.closeDeleteModal());
+      // лишняя- this.closeDeleteModalBtn = document.getElementById('closeDeleteModalBtn'); //кнопка удаления тикета
+      // this.addTicketBtn = document.getElementById('addTicketBtn'); //кнопка добавления тикета справа
+      // this.closeModalBtn = document.getElementById('closeModalBtn'); //кнопка закрытия модального окна
+      // this.ticketForm = document.getElementById('ticketForm'); //форма тикета внутри модального окна
+      // this.confirmDeleteBtn = document.getElementById('confirmDeleteBtn'); //кнопка удалить тикет
+      // this.cancelDeleteBtn = document.getElementById('cancelDeleteBtn'); // кнопка отменить для тикета
+    
+      document.getElementById('addTicketBtn').addEventListener('click', () => this.openTicketModal()); 
+      document.getElementById('closeModalBtn').addEventListener('click', () => this.closeTicketModal());
+      document.getElementById('ticketForm').addEventListener('submit', (event) => this.handleFormSubmit(event));
+      document.getElementById('confirmDeleteBtn').addEventListener('click', () => this.deleteTicket());
+      document.getElementById('cancelDeleteBtn').addEventListener('click', () => this.closeDeleteModal());
     }
   
     // Получение всех тикетов с сервера
     getTickets() {
+      this.loading = document.getElementById('loading'); //картинка загрузки
       this.loading.style.display = 'block';  // Показать иконку загрузки
   
       const xhr = new XMLHttpRequest();
@@ -48,6 +43,7 @@ export class TicketApp {
   
     // Рендеринг списка тикетов
     renderTicketList(tickets) {
+      this.ticketList = document.getElementById('ticket-list'); //список тикетов
       this.ticketList.innerHTML = '';  // Очистить список перед рендерингом
   
       tickets.forEach(ticket => {
@@ -71,6 +67,8 @@ export class TicketApp {
   
     // Открытие модального окна для добавления нового тикета
     openTicketModal() {
+      this.ticketForm = document.getElementById('ticketForm'); //форма тикета внутри модального окна
+      this.ticketModal = document.getElementById('ticketModal'); //модальное окно для создания тикета
       this.ticketModal.style.display = 'block';
       this.ticketForm.reset();
       this.currentTicket = null;
@@ -78,6 +76,7 @@ export class TicketApp {
   
     // Закрытие модального окна
     closeTicketModal() {
+      this.ticketModal = document.getElementById('ticketModal'); //модальное окно для создания тикета
       this.ticketModal.style.display = 'none';
     }
   
@@ -109,6 +108,8 @@ export class TicketApp {
   
     // Редактирование тикета
     editTicket(id) {
+      this.ticketModal = document.getElementById('ticketModal'); //модальное окно для создания тикета
+      this.saveTicketBtn = document.getElementById('saveTicketBtn'); //кнопка для сохранения тикета
       this.currentTicket = id;
       const xhr = new XMLHttpRequest();
       xhr.open('GET', `${this.apiUrl}/?method=ticketById&id=${id}`, true);
@@ -126,6 +127,7 @@ export class TicketApp {
   
     // Подготовка к удалению тикета
     prepareDeleteTicket(id) {
+      this.deleteModal = document.getElementById('deleteModal'); //удаление модального окна
       this.currentTicket = id;
       this.deleteModal.style.display = 'block';
     }
@@ -147,6 +149,7 @@ export class TicketApp {
   
     // Закрытие модального окна для удаления
     closeDeleteModal() {
+      this.deleteModal = document.getElementById('deleteModal'); //удаление модального окна
       this.deleteModal.style.display = 'none';
     }
   
