@@ -18,8 +18,8 @@ export class TicketApp {
   
     // Получение всех тикетов с сервера
     getTickets() {
-      this.loading = document.getElementById('loading'); //картинка загрузки
-      this.loading.style.display = 'block';  // Показать иконку загрузки
+      const loading = document.getElementById('loading'); //картинка загрузки
+      loading.style.display = 'block';  // Показать иконку загрузки
   
       const xhr = new XMLHttpRequest();
       xhr.open('GET', `${this.apiUrl}/?method=allTickets`, true);
@@ -30,12 +30,12 @@ export class TicketApp {
         } else {
           console.error('Ошибка при получении тикетов');
         }
-        this.loading.style.display = 'none';  // Скрыть иконку загрузки
+        loading.style.display = 'none';  // Скрыть иконку загрузки
       });
   
       xhr.addEventListener('error', () => {
         console.error('Ошибка сети');
-        this.loading.style.display = 'none';  // Скрыть иконку загрузки
+        loading.style.display = 'none';  // Скрыть иконку загрузки
       });
   
       xhr.send();
@@ -43,8 +43,8 @@ export class TicketApp {
   
     // Рендеринг списка тикетов
     renderTicketList(tickets) {
-      this.ticketList = document.getElementById('ticket-list'); //список тикетов
-      this.ticketList.innerHTML = '';  // Очистить список перед рендерингом
+      const ticketList = document.getElementById('ticket-list'); //список тикетов
+      ticketList.innerHTML = '';  // Очистить список перед рендерингом
   
       tickets.forEach(ticket => {
         const ticketElement = document.createElement('div');
@@ -61,23 +61,23 @@ export class TicketApp {
         `;
   
         ticketElement.addEventListener('click', () => this.showTicketDetails(ticket.id));
-        this.ticketList.appendChild(ticketElement);
+        ticketList.appendChild(ticketElement);
       });
     }
   
     // Открытие модального окна для добавления нового тикета
     openTicketModal() {
-      this.ticketForm = document.getElementById('ticketForm'); //форма тикета внутри модального окна
-      this.ticketModal = document.getElementById('ticketModal'); //модальное окно для создания тикета
-      this.ticketModal.style.display = 'block';
-      this.ticketForm.reset();
+      const ticketForm = document.getElementById('ticketForm'); //форма тикета внутри модального окна
+      const ticketModal = document.getElementById('ticketModal'); //модальное окно для создания тикета
+      ticketModal.style.display = 'block';
+      ticketForm.reset();
       this.currentTicket = null;
     }
   
     // Закрытие модального окна
     closeTicketModal() {
-      this.ticketModal = document.getElementById('ticketModal'); //модальное окно для создания тикета
-      this.ticketModal.style.display = 'none';
+      ticketModal = document.getElementById('ticketModal'); //модальное окно для создания тикета
+      ticketModal.style.display = 'none';
     }
   
     // Обработчик отправки формы для добавления или редактирования тикета
@@ -108,8 +108,8 @@ export class TicketApp {
   
     // Редактирование тикета
     editTicket(id) {
-      this.ticketModal = document.getElementById('ticketModal'); //модальное окно для создания тикета
-      this.saveTicketBtn = document.getElementById('saveTicketBtn'); //кнопка для сохранения тикета
+      const ticketModal = document.getElementById('ticketModal'); //модальное окно для создания тикета
+      const saveTicketBtn = document.getElementById('saveTicketBtn'); //кнопка для сохранения тикета
       this.currentTicket = id;
       const xhr = new XMLHttpRequest();
       xhr.open('GET', `${this.apiUrl}/?method=ticketById&id=${id}`, true);
@@ -118,8 +118,8 @@ export class TicketApp {
           const ticket = JSON.parse(xhr.response);
           document.getElementById('name').value = ticket.name;
           document.getElementById('description').value = ticket.description;
-          this.ticketModal.style.display = 'block';
-          this.saveTicketBtn.textContent = 'Сохранить изменения';
+          ticketModal.style.display = 'block';
+          saveTicketBtn.textContent = 'Сохранить изменения';
         }
       });
       xhr.send();
@@ -127,9 +127,9 @@ export class TicketApp {
   
     // Подготовка к удалению тикета
     prepareDeleteTicket(id) {
-      this.deleteModal = document.getElementById('deleteModal'); //удаление модального окна
+      const deleteModal = document.getElementById('deleteModal'); //удаление модального окна
       this.currentTicket = id;
-      this.deleteModal.style.display = 'block';
+      deleteModal.style.display = 'block';
     }
   
     // Удаление тикета
@@ -149,8 +149,8 @@ export class TicketApp {
   
     // Закрытие модального окна для удаления
     closeDeleteModal() {
-      this.deleteModal = document.getElementById('deleteModal'); //удаление модального окна
-      this.deleteModal.style.display = 'none';
+      const deleteModal = document.getElementById('deleteModal'); //удаление модального окна
+      deleteModal.style.display = 'none';
     }
   
     // Показать подробности тикета
