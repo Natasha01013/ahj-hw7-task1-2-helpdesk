@@ -1,0 +1,54 @@
+name: Build status
+
+on:
+  push:
+
+# Позволяет запустить этот рабочий процесс вручную на вкладке Действия
+  workflow_dispatch:
+
+# Устанавливает разрешения для GITHUB_TOKEN, разрешающие развертывание на страницах GitHub
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Разрешите только одно одновременное развертывание, пропуская запуски, поставленные в очередь, между текущим запуском и последним, поставленным в очередь.
+# Однако не отменяйте текущие запуски, поскольку мы хотим, чтобы эти производственные развертывания были завершены.
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Шаг 1: Клонировать репозиторий
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Шаг 2: Установить Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '22.14.0'  
+
+      # Шаг 3: Установить зависимости
+      - name: Install dependencies
+        run: npm install
+
+      # Шаг 4: Собрать проект с помощью Webpack
+      - name: Build with Webpack
+        run: npm run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'dist'
+
+      # Шаг 5: Деплой на GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

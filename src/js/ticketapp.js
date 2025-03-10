@@ -2,18 +2,12 @@ export class TicketApp {
     constructor(apiUrl) {
       this.apiUrl = apiUrl;
       this.currentTicket = null;  // Для хранения тикета, который редактируется или удаляется
-      // лишняя- this.closeDeleteModalBtn = document.getElementById('closeDeleteModalBtn'); //кнопка удаления тикета
-      // this.addTicketBtn = document.getElementById('addTicketBtn'); //кнопка добавления тикета справа
-      // this.closeModalBtn = document.getElementById('closeModalBtn'); //кнопка закрытия модального окна
-      // this.ticketForm = document.getElementById('ticketForm'); //форма тикета внутри модального окна
-      // this.confirmDeleteBtn = document.getElementById('confirmDeleteBtn'); //кнопка удалить тикет
-      // this.cancelDeleteBtn = document.getElementById('cancelDeleteBtn'); // кнопка отменить для тикета
     
-      document.getElementById('addTicketBtn').addEventListener('click', () => this.openTicketModal()); 
-      document.getElementById('closeModalBtn').addEventListener('click', () => this.closeTicketModal());
-      document.getElementById('ticketForm').addEventListener('submit', (event) => this.handleFormSubmit(event));
-      document.getElementById('confirmDeleteBtn').addEventListener('click', () => this.deleteTicket());
-      document.getElementById('cancelDeleteBtn').addEventListener('click', () => this.closeDeleteModal());
+      document.getElementById('addTicketBtn').addEventListener('click', () => this.openTicketModal()); //кнопка "добавить тикет"
+      document.getElementById('closeModalBtn').addEventListener('click', () => this.closeTicketModal());//кнопка закрытия модального окна
+      document.getElementById('ticketForm').addEventListener('submit', (event) => this.handleFormSubmit(event));//форма тикета внутри модального окна
+      document.getElementById('confirmDeleteBtn').addEventListener('click', () => this.deleteTicket()); //кнопка удалить тикет
+      document.getElementById('cancelDeleteBtn').addEventListener('click', () => this.closeDeleteModal()); // кнопка отменить при удалении тикета
     }
   
     // Получение всех тикетов с сервера
@@ -55,13 +49,22 @@ export class TicketApp {
             <p>${ticket.status ? 'Завершено' : 'В процессе'}</p>
           </div>
           <div class="actions">
-            <button onclick="ticketApp.editTicket('${ticket.id}')">✎</button>
-            <button onclick="ticketApp.prepareDeleteTicket('${ticket.id}')">❌</button>
+            <button data-id="${ticket.id}" class="edit-btn">✎</button>
+            <button data-id="${ticket.id}" class="delete-btn">❌</button>
           </div>
         `;
   
         ticketElement.addEventListener('click', () => this.showTicketDetails(ticket.id));
         ticketList.appendChild(ticketElement);
+
+        // Добавляем обработчики событий для кнопок редактирования и удаления
+        document.querySelectorAll('.edit-btn').forEach(button => {
+          button.addEventListener('click', () => this.editTicket(button.dataset.id));
+        });
+
+        document.querySelectorAll('.delete-btn').forEach(button => {
+          button.addEventListener('click', () => this.prepareDeleteTicket(button.dataset.id));
+        });
       });
     }
   
@@ -76,38 +79,64 @@ export class TicketApp {
   
     // Закрытие модального окна
     closeTicketModal() {
-      ticketModal = document.getElementById('ticketModal'); //модальное окно для создания тикета
+      const ticketModal = document.getElementById('ticketModal'); //модальное окно для создания тикета
       ticketModal.style.display = 'none';
     }
   
     // Обработчик отправки формы для добавления или редактирования тикета
     handleFormSubmit(event) {
       event.preventDefault();
+
+      const name = document.getElementById('name').value; //Название тикета
+      const description = document.getElementById('description').value; //Описание тикета
   
-      const name = document.getElementById('name').value; //значение названия тикета
-      const description = document.getElementById('description').value; //описание тикета
+      if (this.currentTicket) {
+          // Редактирование существующего тикета
+          console.log('ID тикета для обновления:', this.currentTicket); 
+          const url = `${this.apiUrl}/?method=updateById&id=${this.currentTicket}`;
+          console.log('URL для обновления:', url);
   
-      const xhr = new XMLHttpRequest();
-      const method = this.currentTicket ? 'updateById' : 'createTicket';
-      const url = this.currentTicket ? `${this.apiUrl}/?method=updateById&id=${this.currentTicket.id}` : `${this.apiUrl}/?method=createTicket`;
+          const xhr = new XMLHttpRequest();
+          xhr.open('POST', url, true); //true - запрос асинхронный
+          xhr.setRequestHeader('Content-Type', 'application/json');//метод для задания заголовков с именем Content-Type и значением application/json
   
-      xhr.open('POST', url, true); //true - запрос асинхронный
-        xhr.setRequestHeader('Content-Type', 'application/json'); //метод для задания заголовков с именем Content-Type и значением application/json
-        xhr.addEventListener('load', () => {
-          console.log(xhr.response);  // Проверка ответа сервера
-          if (xhr.status >= 200 && xhr.status < 300) {
-            this.getTickets();  // Обновить список тикетов
-            this.closeTicketModal();  // Закрыть модальное окно
-          } else {
-            console.error('Ошибка при сохранении тикета');
-          }
-      });
+          xhr.addEventListener('load', () => {
+              console.log(xhr.response);// Проверка ответа сервера
+              if (xhr.status >= 200 && xhr.status < 300) {
+                  this.getTickets();// Обновить список тикетов
+                  this.closeTicketModal();// Закрыть модальное окно
+              } else {
+                  console.error('Ошибка при сохранении тикета');
+              }
+          });
   
-      xhr.send(JSON.stringify({ name, description })); //отправим объект в формате JSON
-    }
+          xhr.send(JSON.stringify({ name, description }));
+      } else {
+          // Создание нового тикета
+          console.log("создание нового тикета");
+          const url = `${this.apiUrl}/?method=createTicket`;
   
+          const xhr = new XMLHttpRequest();
+          xhr.open('POST', url, true);
+          xhr.setRequestHeader('Content-Type', 'application/json');
+  
+          xhr.addEventListener('load', () => {
+              console.log(xhr.response);
+              if (xhr.status >= 200 && xhr.status < 300) {
+                  this.getTickets();
+                  this.closeTicketModal();
+              } else {
+                  console.error('Ошибка при сохранении тикета');
+              }
+          });
+  
+          xhr.send(JSON.stringify({ name, description }));
+      }
+  }
+
     // Редактирование тикета
     editTicket(id) {
+      console.log('ID тикета для редактирования:', id); 
       const ticketModal = document.getElementById('ticketModal'); //модальное окно для создания тикета
       const saveTicketBtn = document.getElementById('saveTicketBtn'); //кнопка для сохранения тикета
       this.currentTicket = id;
@@ -116,6 +145,7 @@ export class TicketApp {
       xhr.addEventListener('load', () => {
         if (xhr.status >= 200 && xhr.status < 300) {
           const ticket = JSON.parse(xhr.response);
+          console.log('Тикет, полученный с сервера:', ticket); //Проверим ID тикета, полученного из ответа сервера
           document.getElementById('name').value = ticket.name;
           document.getElementById('description').value = ticket.description;
           ticketModal.style.display = 'block';
