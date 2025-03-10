@@ -1,6 +1,6 @@
-# CI tests
-[![Build status](https://ci.appveyor.com/api/projects/status/q9mlqn111vcriedp?svg=true)](https://ci.appveyor.com/project/Natasha01013/ahj-hw7-task1-2-helpdesk)
-[Github Pages]()
+[![Build status](https://github.com/Natasha01013/ahj-hw7-task1-2-helpdesk/actions/workflows/deploy.yml/badge.svg)](https://github.com/Natasha01013/ahj-hw7-task1-2-helpdesk/actions/workflows/deploy.yml)   
+
+[Github Pages](https://natasha01013.github.io/ahj-hw7-task1-2-helpdesk/)   
 
 # Домашнее задание к занятию "7. Работа с HTTP"
 
